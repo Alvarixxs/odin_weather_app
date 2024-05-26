@@ -12,15 +12,14 @@ const populate_background = async function (city, day) {
         'https://api.unsplash.com/photos/random/?client_id=' + api_key + '&query='+ city + ((day) ? '-day': '-night') + '&orientation=landscape',
         {mode:"cors"}
     )
-    let info = await data.json();
 
-    container.style.backgroundImage = "url('" + info.urls.full + "')"
-    container.style.backgroundSize = "cover";
-    container.style.backgroundPosition = "center";
-    container.style.backgroundRepeat = "no-repeat";
+    if (data.status === 200) {
+        let info = await data.json();
+        container.style.backgroundImage = "url('" + info.urls.full + "')"
+    }
 }
 
-const populate_main = function(data) {
+const populate_main = function(data, c_f) {
     let location = document.getElementById('location')
     let currentTemp = document.getElementById('current-temp')
     let icon = document.getElementById('current-icon')
@@ -33,7 +32,7 @@ const populate_main = function(data) {
     let currentHum = document.getElementById('current-hum')
 
     location.textContent = data.location.name + ', ' + data.location.country
-    currentTemp.textContent = data.current.temperature.celsius + 'º C'
+    currentTemp.textContent = c_f ? data.current.temperature.celsius + 'º C': data.current.temperature.fahrenheit + ' ºF'
     icon.src = data.current.condition.icon
     currentText.textContent = data.current.condition.text
     currentTime.textContent = data.location.timemum.split(' ')[1]
@@ -41,13 +40,13 @@ const populate_main = function(data) {
     let date = new Date(data.forecast[0].date)
     currentDate.textContent = date_string(date)
 
-    currentMin.textContent = data.forecast[0].temperature.min.celsius + ' ºC'
-    currentMax.textContent = data.forecast[0].temperature.max.celsius + ' ºC'
-    feelsLike.textContent = 'Feels like: ' + data.current.feelslike.celsius + ' ºC'
+    currentMin.textContent = c_f ? data.forecast[0].temperature.min.celsius + ' ºC': data.forecast[0].temperature.min.fahrenheit + ' ºF'
+    currentMax.textContent = c_f ? data.forecast[0].temperature.max.celsius + ' ºC': data.forecast[0].temperature.max.fahrenheit + ' ºF'
+    feelsLike.textContent = 'Feels like: ' + (c_f ? data.current.feelslike.celsius + ' ºC': data.current.feelslike.fahrenheit + ' ºF')
     currentHum.textContent = data.current.humidity + '%'
 }
 
-const populate_day = function(data, i) {
+const populate_day = function(data, c_f, i) {
     let date = document.getElementById('date-day-'+i)
     let icon = document.getElementById('day-'+i+'-icon')
     let text = document.getElementById('day-'+i+'-text')
@@ -60,14 +59,14 @@ const populate_day = function(data, i) {
 
     icon.src = data.forecast[i].condition.icon
     text.textContent = data.forecast[i].condition.text
-    min.textContent = data.forecast[i].temperature.min.celsius + ' ºC'
-    max.textContent = data.forecast[i].temperature.max.celsius + ' ºC'
+    min.textContent = c_f ? data.forecast[i].temperature.min.celsius + ' ºC': data.forecast[i].temperature.min.fahrenheit + ' ºF'
+    max.textContent = c_f ? data.forecast[i].temperature.max.celsius + ' ºC': data.forecast[i].temperature.max.celsius + ' ºF'
     hum.textContent = data.forecast[i].humidity + '%'
 }
 
-const populate_days = function (data) {
-    populate_day(data, 1)
-    populate_day(data, 2)
+const populate_days = function (data, c_f) {
+    populate_day(data, c_f, 1)
+    populate_day(data, c_f, 2)
 }
 
 const populateLeft = function(data) {
@@ -82,10 +81,9 @@ const populateLeft = function(data) {
     uv.textContent = data.forecast[0].uv
 }
 
-const update_dom = async function (data) {
-    await populate_background(data.location.name, data.current.day)
-    populate_main(data)
-    populate_days(data)
+const update_dom = function (data, c_f) {
+    populate_main(data, c_f)
+    populate_days(data, c_f)
     populateLeft(data)
 }
 

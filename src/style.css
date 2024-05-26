@@ -11,7 +11,7 @@
     font-style: normal;
 }
 
-svg {
+.svg-elem {
     height: 60%;
     width: auto;
     fill: white;
@@ -28,6 +28,10 @@ body {
     grid-template: repeat(5, 1fr) / repeat(4, 1fr);
     padding: 80px;
     gap: 40px;
+    background-image: url("resources/clouds.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 .grid-items {
@@ -42,18 +46,36 @@ body {
 }
 
 #form-div {
-    grid-row: 1 / 2;
-    grid-column: span 4;
+    grid-area: 1 / 2 / 2 / 4;
     display: flex;
     align-items: center;
     justify-content: center;
+    background: none;
+}
+
+#search-form {
+    background-color: rgb(0, 0, 0, 0.6);
+    width: 80%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
     gap: 10px;
+}
+
+#input-button, #button-c-f {
+    background-color: rgb(0, 0, 0, 0.8);
+    border: none;
+    color: white;
+    font-family: 'MyFont', serif;
+    transition: 0.3s ease-in-out;
 }
 
 input {
     font-size: 1em;
     padding: 10px;
-    border-radius: 10px;
+    font-family: 'MyFont', serif;
 }
 
 .current-side {
@@ -101,4 +123,59 @@ input {
 
 #day-2 {
     grid-area: 4 / -2 / 6 / -1;
+}
+
+::backdrop {
+    background-color: gray;
+    opacity: 0.5;
+}
+
+dialog {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: none;
+    background:none;
+}
+
+.container {
+    --uib-size: 50px;
+    --uib-color: black;
+    --uib-speed: .9s;
+    --uib-bg-opacity: .1;
+    height: var(--uib-size);
+    width: var(--uib-size);
+    transform-origin: center;
+    overflow: visible;
+}
+
+.car {
+    fill: none;
+    stroke: var(--uib-color);
+    stroke-dasharray: 15, 85;
+    stroke-dashoffset: 0;
+    stroke-linecap: round;
+    animation: travel var(--uib-speed) linear infinite;
+    will-change: stroke-dasharray, stroke-dashoffset;
+    transition: stroke 0.5s ease;
+}
+
+.track {
+    stroke: var(--uib-color);
+    opacity: var(--uib-bg-opacity);
+    transition: stroke 0.5s ease;
+}
+
+@keyframes travel {
+    0% {
+        stroke-dashoffset: 0;
+    }
+
+    100% {
+        stroke-dashoffset: 100;
+    }
+}
+
+input:hover {
+    transform: scale(1.05);
 }
