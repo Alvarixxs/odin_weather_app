@@ -56,6 +56,9 @@ const update_display = async function (city) {
         await populate_background(data.location.name, data.current.day)
         await sleep(2000)
     }
+    catch (error) {
+        alert('error retrieving data')
+    }
     finally {
         loading.close()
     }

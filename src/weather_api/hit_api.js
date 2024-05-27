@@ -9,6 +9,10 @@ async function collect_data(city) {
     let answer = await hit_api(city);
     let obj = {}
 
+    if (answer.status === 400) {
+        throw new Error('error retrieving data')
+    }
+
     obj.location = {
         name: answer.location.name,
         country: answer.location.country,
